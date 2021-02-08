@@ -3,7 +3,7 @@ BRANCH := "$(shell git rev-parse --abbrev-ref HEAD)"
 STATUS := "$(shell git status -s)"
 
 BUILD_OUTDIR = "dist"
-BUILD_FILE_PATTERN := "${PROJ}_{{.OS}}_{{.Arch}}"
+BUILD_FILE_PATTERN := "${PROJ}_${BRANCH}_{{.OS}}_{{.Arch}}"
 
 BUILD_ARCH = "amd64"
 BUILD_OS = "linux darwin windows"
@@ -32,11 +32,11 @@ prepare: test tidy credits
 
 .PHONY: build
 build: test
-	gox -ldflags=${BUILD_LDFLAGS} -os=${BUILD_OS} -arch=${BUILD_ARCH} -output=${BUILD_OUTDIR}/${BUILD_FILE_PATTERN}
+	gox -ldflags=${BUILD_LDFLAGS} -os=${BUILD_OS} -arch=${BUILD_ARCH} -output=${BUILD_OUTDIR}/${BRANCH}/${BUILD_FILE_PATTERN}
 
 .PHONY: release
 release: checkbranch checkstatus build
-	ghr -t "${GITHUB_TOKEN}" "${BRANCH}" "${BUILD_OUTDIR}/"
+	ghr "${BRANCH}" "${BUILD_OUTDIR}/${BRANCH}/"
 
 .PHONY: checkbranch
 checkbranch:
