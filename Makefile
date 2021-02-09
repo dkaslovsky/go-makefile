@@ -15,7 +15,7 @@ export GO111MODULE=on
 
 .PHONY: test
 test:
-	go test
+	go test ./...
 
 .PHONY: tidy
 tidy:
